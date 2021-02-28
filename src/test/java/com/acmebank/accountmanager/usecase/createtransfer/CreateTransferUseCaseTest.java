@@ -8,6 +8,7 @@ import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
 import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
 import com.acmebank.accountmanager.usecase.exception.IncorrectCurrencyException;
+import com.acmebank.accountmanager.usecase.exception.InsufficientBalanceException;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -146,10 +147,8 @@ class CreateTransferUseCaseTest {
             .currency("HKD")
             .amount(BigDecimal.TEN)
             .build();
-    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+    Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
-    assertThat(response).isNotNull();
-    assertThat(response.isSuccess()).isFalse();
-    assertThat(response.getMessage()).isEqualTo("Insufficient Balance");
+    assertThat(throwable).isNotNull().isInstanceOf(InsufficientBalanceException.class);
   }
 }

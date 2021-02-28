@@ -4,6 +4,7 @@ import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
 import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
 import com.acmebank.accountmanager.usecase.exception.IncorrectCurrencyException;
+import com.acmebank.accountmanager.usecase.exception.InsufficientBalanceException;
 import java.util.Objects;
 
 public class CreateTransferUseCase {
@@ -29,10 +30,7 @@ public class CreateTransferUseCase {
     }
 
     if (request.getAmount().compareTo(from.getAmount()) > 0) {
-      return CreateTransferResponse.builder()
-          .success(false)
-          .message("Insufficient Balance")
-          .build();
+      throw new InsufficientBalanceException();
     }
 
     return null;
