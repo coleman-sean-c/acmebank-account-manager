@@ -2,6 +2,7 @@ package com.acmebank.accountmanager.usecases.createtransfer;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CreateTransferUseCase {
@@ -21,6 +22,23 @@ public class CreateTransferUseCase {
     Optional<Account> to = accountRepository.findById(request.getTo());
     if (to.isEmpty()) {
       return getNotFoundResponse(request.getTo());
+    }
+
+    Account fromAccount = from.get();
+
+    if (!Objects.equals(request.getCurrency(), fromAccount.getCurrency())) {
+      return CreateTransferResponse.builder()
+          .success(false)
+          .message("Cannot complete transfer")
+          .build();
+    }
+
+    Account toAccount = to.get();
+    if (!Objects.equals(request.getCurrency(), toAccount.getCurrency())) {
+      return CreateTransferResponse.builder()
+              .success(false)
+              .message("Cannot complete transfer")
+              .build();
     }
 
     return null;
