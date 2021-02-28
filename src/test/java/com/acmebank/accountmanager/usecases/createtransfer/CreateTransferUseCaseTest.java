@@ -127,4 +127,32 @@ class CreateTransferUseCaseTest {
     assertThat(response).isNotNull();
     assertThat(response.isSuccess()).isFalse();
   }
+
+  @Test
+  public void testFromInsufficientBalance() {
+    Account from = Account.builder().id("12345678").currency("HKD").amount(BigDecimal.ONE).build();
+
+    Account to =
+        Account.builder()
+            .id("88888888")
+            .currency("HKD")
+            .amount(BigDecimal.valueOf(1_000_000))
+            .build();
+
+    given(accountRepository.findById("12345678")).willReturn(Optional.of(from));
+    given(accountRepository.findById("88888888")).willReturn(Optional.of(to));
+
+    CreateTransferRequest request =
+        CreateTransferRequest.builder()
+            .from("12345678")
+            .to("88888888")
+            .currency("HKD")
+            .amount(BigDecimal.TEN)
+            .build();
+    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+
+    assertThat(response).isNotNull();
+    assertThat(response.isSuccess()).isFalse();
+    assertThat(response.getMessage()).isEqualTo("Insufficient Balance");
+  }
 }

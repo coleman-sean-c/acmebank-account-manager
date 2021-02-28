@@ -36,9 +36,16 @@ public class CreateTransferUseCase {
     Account toAccount = to.get();
     if (!Objects.equals(request.getCurrency(), toAccount.getCurrency())) {
       return CreateTransferResponse.builder()
-              .success(false)
-              .message("Cannot complete transfer")
-              .build();
+          .success(false)
+          .message("Cannot complete transfer")
+          .build();
+    }
+
+    if (request.getAmount().compareTo(fromAccount.getAmount()) > 0) {
+      return CreateTransferResponse.builder()
+          .success(false)
+          .message("Insufficient Balance")
+          .build();
     }
 
     return null;
