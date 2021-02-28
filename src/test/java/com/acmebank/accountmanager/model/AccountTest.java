@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 class AccountTest {
 
@@ -19,6 +20,12 @@ class AccountTest {
         assertThat(account.getId()).isEqualTo(12345678);
         assertThat(account.getCurrency()).isEqualTo("HKD");
         assertThat(account.getAmount()).isEqualTo(BigDecimal.valueOf(1_000_000));
+    }
+
+    @Test
+    public void testBuilderWithNulls() {
+        final Throwable throwable = catchThrowable(() -> Account.builder().build());
+        assertThat(throwable).isInstanceOf(NullPointerException.class);
     }
 
 }
