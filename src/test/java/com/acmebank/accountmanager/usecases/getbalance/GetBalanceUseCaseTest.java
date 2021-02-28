@@ -3,7 +3,9 @@ package com.acmebank.accountmanager.usecases.getbalance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,14 +22,33 @@ class GetBalanceUseCaseTest {
 
   @Test
   public void testNotFound() {
-    GetBalanceRequest request = GetBalanceRequest.builder().id("12345678").build();
-
     given(accountRepository.findById("12345678")).willReturn(Optional.empty());
 
+    GetBalanceRequest request = GetBalanceRequest.builder().id("12345678").build();
     GetBalanceResponse response = getBalanceUseCase.getBalance(request);
 
     assertThat(response).isNotNull();
     assertThat(response.isSuccess()).isFalse();
     assertThat(response.getMessage()).isEqualTo("Account not found.");
+  }
+
+  @Test
+  public void testValid() {
+    Account account =
+        Account.builder()
+            .id("12345678")
+            .currency("HKD")
+            .amount(BigDecimal.valueOf(1_000_000))
+            .build();
+
+    given(accountRepository.findById("12345678")).willReturn(Optional.of(account));
+
+    GetBalanceRequest request = GetBalanceRequest.builder().id("12345678").build();
+    GetBalanceResponse response = getBalanceUseCase.getBalance(request);
+
+    assertThat(response).isNotNull();
+    assertThat(response.isSuccess()).isTrue();
+    assertThat(response.getCurrency()).isEqualTo("HKD");
+    assertThat(response.getAmount()).isEqualTo(BigDecimal.valueOf(1_000_000));
   }
 }
