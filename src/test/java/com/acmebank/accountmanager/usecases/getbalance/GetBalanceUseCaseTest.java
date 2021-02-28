@@ -27,5 +27,7 @@ class GetBalanceUseCaseTest {
     GetBalanceResponse response = getBalanceUseCase.getBalance(request);
 
     assertThat(response).isNotNull();
+    assertThat(response.isSuccess()).isFalse();
+    assertThat(response.getMessage()).isEqualTo("Account not found.");
   }
 }

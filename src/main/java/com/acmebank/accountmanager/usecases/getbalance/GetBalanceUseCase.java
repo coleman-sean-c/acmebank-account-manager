@@ -12,6 +12,6 @@ public class GetBalanceUseCase {
   public GetBalanceResponse getBalance(GetBalanceRequest request) {
     accountRepository.findById(request.getId());
 
-    return new GetBalanceResponse();
+    return GetBalanceResponse.builder().success(false).message("Account not found.").build();
   }
 }
