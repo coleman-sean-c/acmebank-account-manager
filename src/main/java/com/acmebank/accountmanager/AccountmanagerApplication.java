@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AccountmanagerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AccountmanagerApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(AccountmanagerApplication.class, args);
+  }
 }
