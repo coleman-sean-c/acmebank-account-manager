@@ -1,4 +1,4 @@
-package com.acmebank.accountmanager.usecases.getbalance;
+package com.acmebank.accountmanager.usecase.getbalance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;

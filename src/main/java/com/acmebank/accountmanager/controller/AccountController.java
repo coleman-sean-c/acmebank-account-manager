@@ -1,8 +1,8 @@
 package com.acmebank.accountmanager.controller;
 
-import com.acmebank.accountmanager.usecases.getbalance.GetBalanceRequest;
-import com.acmebank.accountmanager.usecases.getbalance.GetBalanceResponse;
-import com.acmebank.accountmanager.usecases.getbalance.GetBalanceUseCase;
+import com.acmebank.accountmanager.usecase.getbalance.GetBalanceRequest;
+import com.acmebank.accountmanager.usecase.getbalance.GetBalanceResponse;
+import com.acmebank.accountmanager.usecase.getbalance.GetBalanceUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

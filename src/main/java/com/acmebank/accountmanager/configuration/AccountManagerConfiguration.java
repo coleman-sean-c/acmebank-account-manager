@@ -2,7 +2,7 @@ package com.acmebank.accountmanager.configuration;
 
 import com.acmebank.accountmanager.model.AccountRepository;
 import com.acmebank.accountmanager.repository.NullAccountRepository;
-import com.acmebank.accountmanager.usecases.getbalance.GetBalanceUseCase;
+import com.acmebank.accountmanager.usecase.getbalance.GetBalanceUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

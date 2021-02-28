@@ -1,4 +1,4 @@
-package com.acmebank.accountmanager.usecases.createtransfer;
+package com.acmebank.accountmanager.usecase.createtransfer;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;

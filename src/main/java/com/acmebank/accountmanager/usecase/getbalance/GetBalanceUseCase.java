@@ -1,4 +1,4 @@
-package com.acmebank.accountmanager.usecases.getbalance;
+package com.acmebank.accountmanager.usecase.getbalance;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;

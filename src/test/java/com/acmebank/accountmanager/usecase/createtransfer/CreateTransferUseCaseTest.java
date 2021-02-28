@@ -1,4 +1,4 @@
-package com.acmebank.accountmanager.usecases.createtransfer;
+package com.acmebank.accountmanager.usecase.createtransfer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;

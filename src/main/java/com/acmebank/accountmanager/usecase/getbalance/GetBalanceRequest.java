@@ -1,4 +1,4 @@
-package com.acmebank.accountmanager.usecases.getbalance;
+package com.acmebank.accountmanager.usecase.getbalance;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
