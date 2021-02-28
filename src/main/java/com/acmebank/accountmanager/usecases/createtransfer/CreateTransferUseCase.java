@@ -14,10 +14,22 @@ public class CreateTransferUseCase {
 
   public CreateTransferResponse createTransfer(CreateTransferRequest request) {
     Optional<Account> from = accountRepository.findById(request.getFrom());
+    if (from.isEmpty()) {
+      return getNotFoundResponse(request.getFrom());
+    }
 
+    Optional<Account> to = accountRepository.findById(request.getTo());
+    if (to.isEmpty()) {
+      return getNotFoundResponse(request.getTo());
+    }
+
+    return null;
+  }
+
+  private CreateTransferResponse getNotFoundResponse(String id) {
     return CreateTransferResponse.builder()
         .success(false)
-        .message("Account '12345678' not found.")
+        .message(String.format("Account '%s' not found.", id))
         .build();
   }
 }

@@ -3,6 +3,7 @@ package com.acmebank.accountmanager.usecases.createtransfer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -35,5 +36,31 @@ class CreateTransferUseCaseTest {
     assertThat(response).isNotNull();
     assertThat(response.isSuccess()).isFalse();
     assertThat(response.getMessage()).isEqualTo("Account '12345678' not found.");
+  }
+
+  @Test
+  public void testToNotFound() {
+    Account from =
+        Account.builder()
+            .id("12345678")
+            .currency("HKD")
+            .amount(BigDecimal.valueOf(1_000_000))
+            .build();
+
+    given(accountRepository.findById("12345678")).willReturn(Optional.of(from));
+    given(accountRepository.findById("88888888")).willReturn(Optional.empty());
+
+    CreateTransferRequest request =
+        CreateTransferRequest.builder()
+            .from("12345678")
+            .to("88888888")
+            .currency("HKD")
+            .amount(BigDecimal.TEN)
+            .build();
+    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+
+    assertThat(response).isNotNull();
+    assertThat(response.isSuccess()).isFalse();
+    assertThat(response.getMessage()).isEqualTo("Account '88888888' not found.");
   }
 }
