@@ -9,8 +9,8 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 public class GetBalanceResponse {
-  private boolean success;
-  private BigDecimal amount;
-  private String currency;
-  private String message;
+  private final boolean success;
+  private final BigDecimal amount;
+  private final String currency;
+  private final String message;
 }

@@ -10,7 +10,7 @@ import lombok.NonNull;
 @Getter
 @Builder
 public class Account {
-  @NonNull private String id;
-  @NonNull private String currency;
-  @NonNull private BigDecimal amount;
+  @NonNull private final String id;
+  @NonNull private final String currency;
+  @NonNull private final BigDecimal amount;
 }

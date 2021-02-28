@@ -9,8 +9,8 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CreateTransferResponse {
-  private boolean success;
-  private String message;
-  private String currency;
-  private BigDecimal amount;
+  private final boolean success;
+  private final String message;
+  private final String currency;
+  private final BigDecimal amount;
 }

@@ -10,8 +10,8 @@ import lombok.NonNull;
 @Getter
 @Builder
 public class CreateTransferRequest {
-  @NonNull private String from;
-  @NonNull private String to;
-  @NonNull private String currency;
-  @NonNull private BigDecimal amount;
+  @NonNull private final String from;
+  @NonNull private final String to;
+  @NonNull private final String currency;
+  @NonNull private final BigDecimal amount;
 }
