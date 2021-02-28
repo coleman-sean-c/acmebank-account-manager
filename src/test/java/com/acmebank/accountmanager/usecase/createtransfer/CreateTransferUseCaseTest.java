@@ -28,13 +28,7 @@ class CreateTransferUseCaseTest {
   public void testFromNotFound() {
     given(accountRepository.findById("12345678")).willReturn(Optional.empty());
 
-    CreateTransferRequest request =
-        CreateTransferRequest.builder()
-            .from("12345678")
-            .to("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.TEN)
-            .build();
+    CreateTransferRequest request = buildCreateTransferRequest();
     Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
     assertThat(throwable).isNotNull().isInstanceOf(AccountNotFoundException.class);
@@ -42,23 +36,12 @@ class CreateTransferUseCaseTest {
 
   @Test
   public void testToNotFound() {
-    Account from =
-        Account.builder()
-            .id("12345678")
-            .currency("HKD")
-            .amount(BigDecimal.valueOf(1_000_000))
-            .build();
+    Account from = buildFromAccount();
 
     given(accountRepository.findById("12345678")).willReturn(Optional.of(from));
     given(accountRepository.findById("88888888")).willReturn(Optional.empty());
 
-    CreateTransferRequest request =
-        CreateTransferRequest.builder()
-            .from("12345678")
-            .to("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.TEN)
-            .build();
+    CreateTransferRequest request = buildCreateTransferRequest();
     Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
     assertThat(throwable).isNotNull().isInstanceOf(AccountNotFoundException.class);
@@ -66,30 +49,13 @@ class CreateTransferUseCaseTest {
 
   @Test
   public void testFromWrongCurrency() {
-    Account from =
-        Account.builder()
-            .id("12345678")
-            .currency("USD")
-            .amount(BigDecimal.valueOf(1_000_000))
-            .build();
-
-    Account to =
-        Account.builder()
-            .id("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.valueOf(1_000_000))
-            .build();
+    Account from = Account.builder().id("12345678").currency("USD").amount(BigDecimal.TEN).build();
+    Account to = buildToAccount();
 
     given(accountRepository.findById("12345678")).willReturn(Optional.of(from));
     given(accountRepository.findById("88888888")).willReturn(Optional.of(to));
 
-    CreateTransferRequest request =
-        CreateTransferRequest.builder()
-            .from("12345678")
-            .to("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.TEN)
-            .build();
+    CreateTransferRequest request = buildCreateTransferRequest();
     Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
     assertThat(throwable).isNotNull().isInstanceOf(IncorrectCurrencyException.class);
@@ -97,30 +63,13 @@ class CreateTransferUseCaseTest {
 
   @Test
   public void testToWrongCurrency() {
-    Account from =
-        Account.builder()
-            .id("12345678")
-            .currency("HKD")
-            .amount(BigDecimal.valueOf(1_000_000))
-            .build();
-
-    Account to =
-        Account.builder()
-            .id("88888888")
-            .currency("CNY")
-            .amount(BigDecimal.valueOf(1_000_000))
-            .build();
+    Account from = buildFromAccount();
+    Account to = Account.builder().id("88888888").currency("CNY").amount(BigDecimal.TEN).build();
 
     given(accountRepository.findById("12345678")).willReturn(Optional.of(from));
     given(accountRepository.findById("88888888")).willReturn(Optional.of(to));
 
-    CreateTransferRequest request =
-        CreateTransferRequest.builder()
-            .from("12345678")
-            .to("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.TEN)
-            .build();
+    CreateTransferRequest request = buildCreateTransferRequest();
     Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
     assertThat(throwable).isNotNull().isInstanceOf(IncorrectCurrencyException.class);
@@ -129,26 +78,39 @@ class CreateTransferUseCaseTest {
   @Test
   public void testFromInsufficientBalance() {
     Account from = Account.builder().id("12345678").currency("HKD").amount(BigDecimal.ONE).build();
-
-    Account to =
-        Account.builder()
-            .id("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.valueOf(1_000_000))
-            .build();
+    Account to = buildToAccount();
 
     given(accountRepository.findById("12345678")).willReturn(Optional.of(from));
     given(accountRepository.findById("88888888")).willReturn(Optional.of(to));
 
-    CreateTransferRequest request =
-        CreateTransferRequest.builder()
-            .from("12345678")
-            .to("88888888")
-            .currency("HKD")
-            .amount(BigDecimal.TEN)
-            .build();
+    CreateTransferRequest request = buildCreateTransferRequest();
     Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
     assertThat(throwable).isNotNull().isInstanceOf(InsufficientBalanceException.class);
+  }
+
+  private CreateTransferRequest buildCreateTransferRequest() {
+    return CreateTransferRequest.builder()
+        .from("12345678")
+        .to("88888888")
+        .currency("HKD")
+        .amount(BigDecimal.TEN)
+        .build();
+  }
+
+  private Account buildFromAccount() {
+    return Account.builder()
+        .id("12345678")
+        .currency("HKD")
+        .amount(BigDecimal.valueOf(1_000_000))
+        .build();
+  }
+
+  private Account buildToAccount() {
+    return Account.builder()
+        .id("88888888")
+        .currency("HKD")
+        .amount(BigDecimal.valueOf(1_000_000))
+        .build();
   }
 }
