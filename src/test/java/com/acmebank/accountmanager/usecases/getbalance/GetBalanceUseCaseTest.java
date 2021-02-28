@@ -20,9 +20,9 @@ class GetBalanceUseCaseTest {
 
   @Test
   public void testNotFound() {
-    GetBalanceRequest request = GetBalanceRequest.builder().id(12345678).build();
+    GetBalanceRequest request = GetBalanceRequest.builder().id("12345678").build();
 
-    given(accountRepository.findById(12345678)).willReturn(Optional.empty());
+    given(accountRepository.findById("12345678")).willReturn(Optional.empty());
 
     GetBalanceResponse response = getBalanceUseCase.getBalance(request);
 

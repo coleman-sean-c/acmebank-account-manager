@@ -9,5 +9,5 @@ import lombok.NonNull;
 @Getter
 @Builder
 public class GetBalanceRequest {
-  @NonNull private long id;
+  private @NonNull String id;
 }
