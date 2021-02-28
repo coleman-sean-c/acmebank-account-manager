@@ -24,7 +24,6 @@ public class CreateTransferUseCase {
     if (!Objects.equals(request.getCurrency(), from.getCurrency())) {
       throw new IncorrectCurrencyException();
     }
-
     if (!Objects.equals(request.getCurrency(), to.getCurrency())) {
       throw new IncorrectCurrencyException();
     }

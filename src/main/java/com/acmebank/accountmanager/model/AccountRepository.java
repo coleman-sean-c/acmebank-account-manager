@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository {
-  public Optional<Account> findById(String id);
+  Optional<Account> findById(String id);
 
-  public void saveAll(List<Account> accounts);
+  void saveAll(List<Account> accounts);
 }
