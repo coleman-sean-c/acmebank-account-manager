@@ -2,8 +2,9 @@ package com.acmebank.accountmanager.usecase.createtransfer;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
+import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
+import com.acmebank.accountmanager.usecase.exception.IncorrectCurrencyException;
 import java.util.Objects;
-import java.util.Optional;
 
 public class CreateTransferUseCase {
 
@@ -14,34 +15,20 @@ public class CreateTransferUseCase {
   }
 
   public CreateTransferResponse createTransfer(CreateTransferRequest request) {
-    Optional<Account> from = accountRepository.findById(request.getFrom());
-    if (from.isEmpty()) {
-      return getNotFoundResponse(request.getFrom());
+    Account from =
+        accountRepository.findById(request.getFrom()).orElseThrow(AccountNotFoundException::new);
+    Account to =
+        accountRepository.findById(request.getTo()).orElseThrow(AccountNotFoundException::new);
+
+    if (!Objects.equals(request.getCurrency(), from.getCurrency())) {
+      throw new IncorrectCurrencyException();
     }
 
-    Optional<Account> to = accountRepository.findById(request.getTo());
-    if (to.isEmpty()) {
-      return getNotFoundResponse(request.getTo());
+    if (!Objects.equals(request.getCurrency(), to.getCurrency())) {
+      throw new IncorrectCurrencyException();
     }
 
-    Account fromAccount = from.get();
-
-    if (!Objects.equals(request.getCurrency(), fromAccount.getCurrency())) {
-      return CreateTransferResponse.builder()
-          .success(false)
-          .message("Cannot complete transfer")
-          .build();
-    }
-
-    Account toAccount = to.get();
-    if (!Objects.equals(request.getCurrency(), toAccount.getCurrency())) {
-      return CreateTransferResponse.builder()
-          .success(false)
-          .message("Cannot complete transfer")
-          .build();
-    }
-
-    if (request.getAmount().compareTo(fromAccount.getAmount()) > 0) {
+    if (request.getAmount().compareTo(from.getAmount()) > 0) {
       return CreateTransferResponse.builder()
           .success(false)
           .message("Insufficient Balance")
@@ -49,12 +36,5 @@ public class CreateTransferUseCase {
     }
 
     return null;
-  }
-
-  private CreateTransferResponse getNotFoundResponse(String id) {
-    return CreateTransferResponse.builder()
-        .success(false)
-        .message(String.format("Account '%s' not found.", id))
-        .build();
   }
 }

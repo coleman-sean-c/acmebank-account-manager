@@ -1,10 +1,13 @@
 package com.acmebank.accountmanager.usecase.createtransfer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
+import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
+import com.acmebank.accountmanager.usecase.exception.IncorrectCurrencyException;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -31,11 +34,9 @@ class CreateTransferUseCaseTest {
             .currency("HKD")
             .amount(BigDecimal.TEN)
             .build();
-    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+    Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
-    assertThat(response).isNotNull();
-    assertThat(response.isSuccess()).isFalse();
-    assertThat(response.getMessage()).isEqualTo("Account '12345678' not found.");
+    assertThat(throwable).isNotNull().isInstanceOf(AccountNotFoundException.class);
   }
 
   @Test
@@ -57,11 +58,9 @@ class CreateTransferUseCaseTest {
             .currency("HKD")
             .amount(BigDecimal.TEN)
             .build();
-    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+    Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
-    assertThat(response).isNotNull();
-    assertThat(response.isSuccess()).isFalse();
-    assertThat(response.getMessage()).isEqualTo("Account '88888888' not found.");
+    assertThat(throwable).isNotNull().isInstanceOf(AccountNotFoundException.class);
   }
 
   @Test
@@ -90,10 +89,9 @@ class CreateTransferUseCaseTest {
             .currency("HKD")
             .amount(BigDecimal.TEN)
             .build();
-    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+    Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
-    assertThat(response).isNotNull();
-    assertThat(response.isSuccess()).isFalse();
+    assertThat(throwable).isNotNull().isInstanceOf(IncorrectCurrencyException.class);
   }
 
   @Test
@@ -122,10 +120,9 @@ class CreateTransferUseCaseTest {
             .currency("HKD")
             .amount(BigDecimal.TEN)
             .build();
-    CreateTransferResponse response = createTransferUseCase.createTransfer(request);
+    Throwable throwable = catchThrowable(() -> createTransferUseCase.createTransfer(request));
 
-    assertThat(response).isNotNull();
-    assertThat(response.isSuccess()).isFalse();
+    assertThat(throwable).isNotNull().isInstanceOf(IncorrectCurrencyException.class);
   }
 
   @Test
