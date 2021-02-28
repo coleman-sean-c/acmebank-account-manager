@@ -2,7 +2,7 @@ package com.acmebank.accountmanager.usecase.getbalance;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
-import java.util.Optional;
+import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
 
 public class GetBalanceUseCase {
   private AccountRepository accountRepository;
@@ -12,9 +12,10 @@ public class GetBalanceUseCase {
   }
 
   public GetBalanceResponse getBalance(GetBalanceRequest request) {
-    Optional<Account> optional = accountRepository.findById(request.getId());
+    Account account =
+        accountRepository.findById(request.getId()).orElseThrow(AccountNotFoundException::new);
 
-    return optional.map(this::responseFromAccount).orElseGet(this::failureResponse);
+    return responseFromAccount(account);
   }
 
   private GetBalanceResponse responseFromAccount(Account account) {
@@ -23,9 +24,5 @@ public class GetBalanceUseCase {
         .amount(account.getAmount())
         .currency(account.getCurrency())
         .build();
-  }
-
-  private GetBalanceResponse failureResponse() {
-    return GetBalanceResponse.builder().success(false).message("Account not found.").build();
   }
 }

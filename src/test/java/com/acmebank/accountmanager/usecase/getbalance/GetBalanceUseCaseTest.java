@@ -1,10 +1,12 @@
 package com.acmebank.accountmanager.usecase.getbalance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
+import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -25,11 +27,9 @@ class GetBalanceUseCaseTest {
     given(accountRepository.findById("12345678")).willReturn(Optional.empty());
 
     GetBalanceRequest request = GetBalanceRequest.builder().id("12345678").build();
-    GetBalanceResponse response = getBalanceUseCase.getBalance(request);
+    Throwable throwable = catchThrowable(() -> getBalanceUseCase.getBalance(request));
 
-    assertThat(response).isNotNull();
-    assertThat(response.isSuccess()).isFalse();
-    assertThat(response.getMessage()).isEqualTo("Account not found.");
+    assertThat(throwable).isNotNull().isInstanceOf(AccountNotFoundException.class);
   }
 
   @Test
