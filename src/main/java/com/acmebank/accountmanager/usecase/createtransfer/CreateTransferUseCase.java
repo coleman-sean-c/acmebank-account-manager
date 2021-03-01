@@ -5,6 +5,7 @@ import com.acmebank.accountmanager.model.AccountRepository;
 import com.acmebank.accountmanager.usecase.exception.AccountNotFoundException;
 import com.acmebank.accountmanager.usecase.exception.IncorrectCurrencyException;
 import com.acmebank.accountmanager.usecase.exception.InsufficientBalanceException;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class CreateTransferUseCase {
@@ -32,6 +33,26 @@ public class CreateTransferUseCase {
       throw new InsufficientBalanceException();
     }
 
-    return null;
+    Account newFrom =
+        Account.builder()
+            .id(from.getId())
+            .currency(from.getCurrency())
+            .amount(from.getAmount().subtract(request.getAmount()))
+            .build();
+
+    Account newTo =
+        Account.builder()
+            .id(to.getId())
+            .currency(to.getCurrency())
+            .amount(to.getAmount().add(request.getAmount()))
+            .build();
+
+    accountRepository.saveAll(Arrays.asList(newFrom, newTo));
+
+    return CreateTransferResponse.builder()
+        .amount(newFrom.getAmount())
+        .currency(newFrom.getCurrency())
+        .success(true)
+        .build();
   }
 }
