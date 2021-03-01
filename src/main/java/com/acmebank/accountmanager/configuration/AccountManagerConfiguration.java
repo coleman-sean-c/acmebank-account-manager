@@ -3,6 +3,7 @@ package com.acmebank.accountmanager.configuration;
 import com.acmebank.accountmanager.model.Account;
 import com.acmebank.accountmanager.model.AccountRepository;
 import com.acmebank.accountmanager.repository.MapAccountRepository;
+import com.acmebank.accountmanager.usecase.createtransfer.CreateTransferUseCase;
 import com.acmebank.accountmanager.usecase.getbalance.GetBalanceUseCase;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -30,5 +31,10 @@ public class AccountManagerConfiguration {
   @Bean
   public GetBalanceUseCase getBalanceUseCase(AccountRepository accountRepository) {
     return new GetBalanceUseCase(accountRepository);
+  }
+
+  @Bean
+  public CreateTransferUseCase createTransferUseCase(AccountRepository accountRepository) {
+    return new CreateTransferUseCase(accountRepository);
   }
 }
